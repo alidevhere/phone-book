@@ -277,7 +277,7 @@ void List::search(string s)
 	Node *rptr = head;
 	
 	for (int i = 1; i <= count; i++)
-	{
+	{ 
 		
 		
 		if (substring(rptr->getName(), s.length()) == s)
@@ -389,7 +389,9 @@ void List::searchControls()//after searching contats control is trnasfered to th
 					n++;
 					if (n == menu_item)
 					{
-						gotoXY(70, 10); cout << (*resultsIter)->getName() << endl;//
+						clearContacts();
+						printContactDetails(*resultsIter);
+						//gotoXY(70, 10); cout << (*resultsIter)->getName() << endl;//
 					}
 				}
 
@@ -651,6 +653,16 @@ void List::deleteContact(Node *&ptr)
 
 }
 
+void List:: printContactDetails(Node *rptr)
+{
+	gotoXY(15, 5); cout << setw(20) << left << "Phonetic Name    " << rptr->getName();//each length 0f 18
+	gotoXY(15, 7); cout << setw(20) << left << "Contatc Number   " << rptr->getPhoneNo();
+	gotoXY(15, 9); cout << setw(20) << left << "Nick Name        " << rptr->getNickName();
+	gotoXY(15, 11); cout << setw(20) << left << "E-mail Address   " << rptr->getmail();
+	gotoXY(15, 13); cout << setw(20) << left << "House Address    " << rptr->getadress();
+	gotoXY(15, 15); cout << setw(20) << left << "Relationship     " << rptr->getrelation();
+
+}
 
 
 
@@ -663,12 +675,7 @@ void List::printDetails(int n)
 		rptr = rptr->next;
 	}
 
-	gotoXY(15, 5); cout << setw(20) << left << "Phonetic Name    " << rptr->getName();//each length 0f 18
-	gotoXY(15, 7); cout << setw(20) << left << "Contatc Number   " << rptr->getPhoneNo();
-	gotoXY(15, 9); cout << setw(20) << left << "Nick Name        " << rptr->getNickName();
-	gotoXY(15, 11); cout << setw(20) << left << "E-mail Address   " << rptr->getmail();
-	gotoXY(15, 13); cout << setw(20) << left << "House Address    " << rptr->getadress();
-	gotoXY(15, 15); cout << setw(20) << left << "Relationship     " << rptr->getrelation();
+	printContactDetails(rptr);
 
 	//add controls for this menu
 	clearMenu();

@@ -36,6 +36,7 @@ public:
 
 	void UpdateContact(Node *&ptr);
 	void deleteContact(Node *&ptr);
+	void printContactDetails(Node * rptr);
 	void addToFavorite(List &fav,Node *&ptr);
 	void printMainMenuOptions();
 	void addNew();
