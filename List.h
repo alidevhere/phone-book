@@ -14,7 +14,7 @@ class List
 private:
 	void setTail();
 	string substring(string s, int n);
-	bool isFound(string s,Node *head);//modify it second argument
+	bool isFound(string s);//modify it second argument
 	Node *& isFoundAt(string s);
 public:
 	
@@ -53,6 +53,6 @@ public:
 	void Menu();
 	void contact();
 	void gotoXY(int, int);
-	
+	void start();
 };
 

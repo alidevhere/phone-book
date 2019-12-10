@@ -24,7 +24,7 @@ public:
 	//constructors
 	Node();
 	Node(string n, string no);
-	Node(string n, string no, string phn, string mail, string adr, string rel);
+	Node(string n, string no, string nn, string mail, string adr, string rel);
 	
 	//getters
 	string getName();
@@ -47,7 +47,7 @@ public:
 	char getNameLetter();
 	void writeToFile(ofstream &out);
 	bool isSame(Node *ptr);
-
+	Node *& copy();
 
 	void shareDetails(string s);
 	

@@ -22,10 +22,10 @@ Node::Node(string n, string no):prev(NULL),next(NULL)
 	relation = "0";
 }
 
-Node::Node(string n, string no, string phn, string mail, string adr, string rel):prev(NULL),next(NULL)
+Node::Node(string n, string no, string nn, string mail, string adr, string rel):prev(NULL),next(NULL)
 {
 	pName = n;
-	nName = phn;
+	nName = nn;
 	phnNo = no;
 	this->mail = mail;
 	this->adrs =adr;
@@ -118,6 +118,14 @@ bool Node::isSame(Node * ptr)
 	else {
 		return false;
 	}
+}
+
+Node *& Node::copy()
+{
+	Node *ptr = new Node(this->getName(), this->getPhoneNo(), this->getNickName(), this->getmail(),
+		this->getadress(), this->getrelation());
+	return ptr;
+
 }
 
 

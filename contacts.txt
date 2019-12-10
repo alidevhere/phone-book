@@ -1,24 +1,6 @@
-8
-ali as
-23456789876
-0
-0
-0
-raju
-arbaz sheraz
-030456789056
-0
-0
-0
-0
-ali ashraf
-2345676543
-0
-0
-0
-0
-ahmed sattar
-098765432
+4
+ali
+678987898778
 0
 0
 0
@@ -28,21 +10,15 @@ ghamees ul mohsin
 0
 0
 0
+gm
+raza
+987654343567
+0
+0
+0
 0
 salman sarfraz
 56776545678
-0
-0
-0
-0
-sarfaraz shehzad
-030056787654
-0
-0
-0
-0
-zaeem
-345678987654
 0
 0
 0
