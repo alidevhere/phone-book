@@ -1,7 +1,7 @@
 #pragma once
 #include<iostream>
 #include<string>
-
+#include<fstream>
 using namespace std;
 
 class Node
@@ -45,5 +45,12 @@ public:
 	
 	// functions
 	char getNameLetter();
+	void writeToFile(ofstream &out);
+	
+
+
+	void shareDetails(string s);
+	
+
 };
 

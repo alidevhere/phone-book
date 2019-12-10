@@ -14,6 +14,8 @@ class List
 private:
 	void setTail();
 	string substring(string s, int n);
+	bool isFound(string s,Node *head);//modify it second argument
+	Node *& isFoundAt(string s);
 public:
 	
 	int count;
@@ -31,25 +33,26 @@ public:
 	
 	
 	void clearContacts();
-	void printDetails(int n);
+	void printDetails(Node *rptr);
 	void clearMenu();
 
 	void UpdateContact(Node *&ptr);
 	void deleteContact(Node *&ptr);
 	void printContactDetails(Node * rptr);
-	void addToFavorite(List &fav,Node *&ptr);
+	void removeFromFav();
 	void printMainMenuOptions();
 	void addNew();
 	void search(string s);
 	void searchControls();
 	void printContacts();
 
-
+	void saveContactsToFile(ofstream &out);
+	void loadContacts(string s);
+	void printFavorites();
+	void loadFav();
 	void Menu();
 	void contact();
 	void gotoXY(int, int);
 	
-
-	~List();
 };
 

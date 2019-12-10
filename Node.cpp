@@ -97,4 +97,28 @@ char Node::getNameLetter()
 	return pName[0];
 }
 
+void Node::writeToFile(ofstream &out)
+{
+	out << this->getName()<<endl;
+	out << this->getPhoneNo() << endl;
+	out << this->getmail() << endl;
+	out << this->getadress() << endl;
+	out << this->getrelation() << endl;
+	out << this->getNickName() << endl;
+}
+
+
+void Node::shareDetails(string s)
+{
+	ofstream out;
+	out.open(s);
+	if(this->getName()!="0") out << this->getName() << endl;
+	if (this->getPhoneNo() != "0")out << this->getPhoneNo() << endl;
+	if (this->getrelation() != "0")out << this->getrelation();
+	if (this->getadress() != "0")out << this->getadress() << endl;
+	if (this->getmail() != "0")out << this->getmail();
+	out.close();
+
+}
+
 

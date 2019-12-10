@@ -7,6 +7,7 @@ COORD CursorPosition; // used for goto
 HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 list <Node*>results;
 list <Node *>::iterator resultsIter;
+List favorites;
 
 List::List()
 {
@@ -108,7 +109,7 @@ void List::printMainMenuOptions()
 	gotoXY(95, 5); cout << "* Add New Contatct";
 	gotoXY(95, 6); cout << "* Favorites";
 	gotoXY(95, 7); cout << "* Search";
-	gotoXY(95, 8); cout << "* More Options";
+	gotoXY(95, 8); cout << "* Exit";
 }
 
 void List::addNew()
@@ -150,6 +151,7 @@ while (running)
 		y = 43; x = 17;
 		gotoXY(y, x); cout << "=>";
 		menu_item = 7;
+		continue;
 	}
 	if (GetAsyncKeyState(VK_LEFT))
 	{
@@ -158,6 +160,7 @@ while (running)
 
 		gotoXY(y, x); cout << "=>";
 		menu_item = 6;
+		continue;
 	}
 
 
@@ -170,7 +173,7 @@ while (running)
 		continue;
 	}
 
-	if (GetAsyncKeyState(VK_RETURN))
+	if (GetAsyncKeyState(VK_RETURN)<0)
 	{
 		//changes being made in copy
 		string n;
@@ -231,15 +234,25 @@ while (running)
 
 			if ((ptr->getName() != "0") && (ptr->getPhoneNo() != "0"))
 			{
+				if (!isFound(ptr->getName(), head))
+				{
 
-				
-				insert(ptr);
-				gotoXY(40, 20); cout << "Contact saved successfully !!";
-				Sleep(1000);
-				clearMenu();
-				clearContacts();
-				printMainMenuOptions();
-				contact();
+					insert(ptr);
+					ofstream out;
+					out.open("contacts.txt");
+					saveContactsToFile(out);
+					gotoXY(40, 20); cout << "Contact saved successfully !!";
+					Sleep(1000);
+					clearMenu();
+					clearContacts();
+					printMainMenuOptions();
+					contact();
+				}
+				else {
+					gotoXY(15, 20); cout << "This name already exists please change the name";
+					Sleep(2000);
+					gotoXY(15, 20); cout << "                                                ";
+				}
 			}
 			else
 			{
@@ -276,6 +289,7 @@ void List::search(string s)
 	gotoXY(18, 5); cout << setw(30) << left << "Contact Names" << "   " << "Phone Numbers";
 	Node *rptr = head;
 	
+	results.clear();
 	for (int i = 1; i <= count; i++)
 	{ 
 		
@@ -314,14 +328,17 @@ void List::searchControls()//after searching contats control is trnasfered to th
 	int x=7, y=16;
 
 	bool running = true;
-	int menu_item = 1;
+	unsigned int menu_item = 1;
 	while (running)
 	{	//		down=Y increase
 		//towrds right =X increases
 
 	 // the >nul bit causes it the print no message
+		gotoXY(80, 12); cout << "menu item = "<<menu_item<<"   x!=result size"<< results.size() + 6;
+		gotoXY(80, 13); cout << "x= "<<x <<"y= "<<y<<".."<< menu_item;
+
 		system("pause>nul");
-		if (GetAsyncKeyState(VK_DOWN) && x != (results.size()+6)) 
+		if (GetAsyncKeyState(VK_DOWN) && x != (results.size()+6)&& y != 85)
 		{
 			gotoXY(y, x); cout << "  ";
 			x++;
@@ -331,7 +348,7 @@ void List::searchControls()//after searching contats control is trnasfered to th
 
 		}
 
-		if (GetAsyncKeyState(VK_UP) && x != 7) //up button pressed
+		if (GetAsyncKeyState(VK_UP) && x != 7&& y!=85) //up button pressed
 		{
 			gotoXY(y, x); cout << "  ";
 			x--;
@@ -362,7 +379,7 @@ void List::searchControls()//after searching contats control is trnasfered to th
 
 
 
-		if (GetAsyncKeyState(VK_RETURN))
+		if (GetAsyncKeyState(VK_RETURN)<0)
 		{
 			switch (menu_item)
 			{
@@ -375,13 +392,12 @@ void List::searchControls()//after searching contats control is trnasfered to th
 				printMainMenuOptions();
 				gotoXY(18, 7); cout << "  ";
 				Menu();
-				
 				break;
+	
 			}
 			
 			default :
 			{
-				gotoXY(70, 15); cout << "MEnU item is" << menu_item;
 				list <Node*>::iterator it;
 				int n = 0;
 				for (resultsIter = results.begin(); resultsIter != results.end(); resultsIter++)
@@ -391,19 +407,21 @@ void List::searchControls()//after searching contats control is trnasfered to th
 					{
 						clearContacts();
 						printContactDetails(*resultsIter);
-						//gotoXY(70, 10); cout << (*resultsIter)->getName() << endl;//
+						printDetails(*resultsIter);
+	
 					}
 				}
-
+				
 				break;
+			
 			}
 
+			
 
-
-
+		
 			}
 
-
+			
 		}
 	}
 
@@ -425,8 +443,6 @@ void List::clearContacts()
 
 void List::clearMenu()
 {
-
-	//gotoXY(80, 5); 
 
 	for (int x = 5; x < 25; x++)
 	{
@@ -469,7 +485,7 @@ void List::UpdateContact(Node *&rptr)
 
 	 // the >nul bit causes it the print no message
 		system("pause>nul");
-		if (GetAsyncKeyState(VK_DOWN) && x != 17) //down button pressed:17
+		if (GetAsyncKeyState(VK_DOWN) && x != 17) 
 		{
 			gotoXY(y, x); cout << "  ";
 			x=x+2;
@@ -484,7 +500,6 @@ void List::UpdateContact(Node *&rptr)
 		{
 
 			gotoXY(y, x); cout << "  ";
-			//gotoXY(13, 17); cout << "  ";
 			y = 43; x = 17;
 			gotoXY(y, x); cout << "=>";
 			menu_item = 7;
@@ -508,7 +523,7 @@ void List::UpdateContact(Node *&rptr)
 			continue;
 		}
 
-		if (GetAsyncKeyState(VK_RETURN))
+		if (GetAsyncKeyState(VK_RETURN)<0)
 		{
 			//changes being made in copy
 			string n;
@@ -569,15 +584,24 @@ void List::UpdateContact(Node *&rptr)
 			
 				if (( ptr->getName()!="0" )&& (ptr->getPhoneNo()!="0") )
 				{
-
-					deleteContact(rptr);
+					if (!isFound(ptr->getName(), head))
+					{	deleteContact(rptr);
 					insert(ptr);
+					ofstream out;
+					out.open("contacts.txt");
+					saveContactsToFile(out);
 					gotoXY(40, 20); cout << "Contact saved successfully !!";
 					Sleep(1000);
 					clearMenu();
 					clearContacts();
 					printMainMenuOptions();
 					contact();
+					}else 
+					{
+						gotoXY(13, 20); cout << "Contact with this name already exists please change the name !!";
+						Sleep(2000);
+						gotoXY(13, 20);cout<< "                                                                ";
+					}
 				}
 				else
 				{
@@ -609,6 +633,9 @@ void List::UpdateContact(Node *&rptr)
 
 void List::deleteContact(Node *&ptr)
 {
+
+
+
 	if (ptr->next&&ptr->prev) //middle node
 	{
 		ptr->prev->next = ptr->next;
@@ -650,7 +677,6 @@ void List::deleteContact(Node *&ptr)
 	delete ptr;
 	count--;
 
-
 }
 
 void List:: printContactDetails(Node *rptr)
@@ -664,17 +690,107 @@ void List:: printContactDetails(Node *rptr)
 
 }
 
-
-
-
-void List::printDetails(int n)
+void List::removeFromFav()
 {
-	Node *rptr = head;
-	for (int i = 0; i < n; i++)
+
+
+	clearMenu();
+	gotoXY(95, 5); cout << "* Back";
+	gotoXY(16, 7); cout << "=>";
+	int x = 7, y = 16;
+	int menu_item = 1;
+	bool running = true;
+	while (running)
 	{
-		rptr = rptr->next;
+		system("pause>nul");
+
+		if (GetAsyncKeyState(VK_DOWN) && x != (favorites.count + 6) && x != 5 && y != 93)
+		{
+			gotoXY(y, x); cout << "  ";
+			x++;
+			gotoXY(y, x); cout << "=>";
+			menu_item++;
+			continue;
+
+		}
+
+
+
+		if (GetAsyncKeyState(VK_UP) && x != 7 && x != 5 && y != 93)
+		{
+			gotoXY(y, x); cout << "  ";
+			x--;
+			gotoXY(y, x); cout << "=>";
+			menu_item--;
+			continue;
+		}
+
+		if (GetAsyncKeyState(VK_LEFT))
+		{
+
+			gotoXY(y, x); cout << "  ";
+			y = 16; x = 7;
+			gotoXY(16, 7); cout << "=>";
+			menu_item = 1;
+
+		}
+		if (GetAsyncKeyState(VK_RIGHT))
+		{
+
+			gotoXY(y, x); cout << "  ";
+			x = 5; y = 93;
+			gotoXY(y, x); cout << "=>";
+			menu_item = 0;
+
+		}
+
+		if (GetAsyncKeyState(VK_RETURN)<0)
+		{
+			switch (menu_item)
+			{
+			case 0://back option in removing from favorites
+			{
+				clearMenu();
+				clearContacts();
+				printFavorites();
+				
+			break;
+			}
+			default:
+			{
+				
+				Node *rptr=favorites.head;
+				for (int i=1;i<=favorites.count;i++)
+				{
+					if (i == menu_item) { break; }
+					rptr = rptr->next;
+				}
+				
+				favorites.deleteContact(rptr);
+				gotoXY(85, 20); cout << "Contact removed from favorites" << menu_item;
+				ofstream out("favorites.txt");
+				favorites.saveContactsToFile(out);
+				Sleep(3000);
+				clearMenu();
+				clearContacts();
+				printFavorites();
+				break;
+
+			}
+
+
+			}
+
+		}
+
 	}
 
+}
+
+
+void List::printDetails(Node *rptr)
+{
+	
 	printContactDetails(rptr);
 
 	//add controls for this menu
@@ -719,41 +835,87 @@ void List::printDetails(int n)
 			continue;
 		}
 		
-		if (GetAsyncKeyState(VK_RETURN))
+		if (GetAsyncKeyState(VK_RETURN)<0)
 		{
 			switch (menu_item) {//for exit make running=false
 
-			case 0: {
-				gotoXY(93, 5); cout << "  ";
-				// making new node copy
-			
+			case 0: {//update
+				//if (!favorites.isFound(rptr->getName(), favorites.head))
+				{
+					gotoXY(93, 5); cout << "  ";
+					UpdateContact(rptr);
+				}
+				//else 
+				{
+					//also update contact in favorites list
+					//Node *p= favorites.isFoundAt(rptr->getName());
+					//favorites.deleteContact(p);
+					//favorites.insert(rptr);
 
-				
-				UpdateContact(rptr);
+				}
+
 				break;
 					}
 
 
-			case 1: {
+			case 1: {//delete
+
 				deleteContact(rptr);
+				ofstream out;
+				out.open("contacts.txt");
+				saveContactsToFile(out);
 				gotoXY(85, 20); cout << "Contact Deleted Successfully...";
 				Sleep(1000);
 				gotoXY(85, 20); cout << "                                ";
 				clearContacts();
 				clearMenu();
 				printMainMenuOptions();
+
 				contact();
-
-
 				break;
 			}
 
-			case 2: {
+			case 2: {//add to favorite
+				if (!favorites.isFound(rptr->getName(), favorites.head))
+				{
+					Node *fav = new Node(rptr->getName(), rptr->getPhoneNo(),
+						rptr->getNickName(), rptr->getmail(),
+						rptr->getadress(), rptr->getrelation());
+					favorites.insert(fav);
+					ofstream out;
+					out.open("favorites.txt");
+					favorites.saveContactsToFile(out);
+					gotoXY(85, 20); cout << "Contact Added to favorites";
+					Sleep(1000);
+					gotoXY(85, 20); cout << "                                ";
+					clearContacts();
+					clearMenu();
+					printMainMenuOptions();
+					contact();
+				}
+				else
+				{
+					gotoXY(30, 20); cout << "Contact is already added to favorites";
+					Sleep(2000);
+					gotoXY(30, 20); cout << "                                     ";
+					clearContacts();
+					clearMenu();
+					printMainMenuOptions();
+					contact();
+				}
+				break;
+			}
+
+			case 3: {// share
 				
-				break;
-			}
-
-			case 3: {
+				gotoXY(15, 20); cout << "Details of this contact are saved in file 'share.txt'";
+					gotoXY(15, 21);cout<<"you can share it with anyone ";
+				rptr->shareDetails("share.txt");
+				Sleep(3000);
+				clearContacts();
+				clearMenu();
+				printMainMenuOptions();
+				contact();
 				
 				break;
 			}
@@ -821,9 +983,10 @@ void List::Menu()
 			gotoXY(y, x); cout << "  ";
 			gotoXY(18, 7); cout << "=>";
 			contact();
+			continue;//extra
 		}
 
-		if (GetAsyncKeyState(VK_RETURN))
+		if (GetAsyncKeyState(VK_RETURN)<0)
 		{
 			switch (menu_item) {//for exit make running=false
 
@@ -837,13 +1000,15 @@ void List::Menu()
 				gotoXY(15, 15); cout << setw(20) << left << "Relationship     " ;
 				gotoXY(y, x); cout << "  ";
 				addNew();
+
 				break;
 			}
 
 
 			case 1: {//favorites
-				gotoXY(20, 16);
-				cout << "You chose Option 1     ";
+				
+				clearContacts();
+				printFavorites();
 				break;
 			}
 
@@ -854,16 +1019,20 @@ void List::Menu()
 				gotoXY(85, 5); cout << "Search :  ";
 				getline(cin, s);
 				search(s);
-				searchControls();//make functio that records searched results
-				//now control should be transfered to search controls
+					searchControls();//make functio that records searched results
+					//now control should be transfered to search controls
 				break;
 			}
 
-			case 3: {
-				gotoXY(20, 16);
-				cout << "You chose Option 3     ";
+			case 3: 
+				exit(0);
 				break;
-			}
+			
+			default:
+			
+				cout << "choose an option";
+				Sleep(2000);
+
 			}
 		}
 
@@ -871,26 +1040,193 @@ void List::Menu()
 
 	}
 
-
-
-
-
-
-
-
 }
+
+
+
 
 void List::printContacts()
 {
+	if (count > 0)
+	{
+		Node *rptr = head;
+		int XL = 7;
+		for (int i = 0; i < count; i++)
+		{
+			gotoXY(20, XL);  cout << setw(30) << left << rptr->getName() << "       " << rptr->getPhoneNo();
+			rptr = rptr->next;
+			XL++;
+		}
+	}
+	else
+	{
+		gotoXY(20, 7);  cout << "No contacts to display !!!";
+	}
+}
 
+void List::saveContactsToFile(ofstream &out)//out.open(s, ios::app);
+{
+	out << this->count<<endl;
 	Node *rptr = head;
-	int XL = 7;
 	for (int i = 0; i < count; i++)
 	{
-		gotoXY(20, XL);  cout << setw(30) << left << rptr->getName() << "       " << rptr->getPhoneNo();
+		rptr->writeToFile(out);
 		rptr = rptr->next;
-		XL++;
 	}
+
+	out.close();
+
+}
+
+void List::loadContacts(string s)
+{
+	string buff,t;
+	int count;
+	ifstream in;
+	in.open(s,ios::in);
+	if (in.is_open())
+	{
+		getline(in, buff);
+		count = stoi(buff);
+	
+		this->count = count;
+		for (int i = 0; i < count; i++)
+		{
+			Node *ptr = new Node();
+
+			getline(in, buff);
+			ptr->setName(buff);
+			
+
+
+			getline(in, buff);
+			ptr->setPhone(buff);
+			
+
+			getline(in, buff);
+			ptr->setMail(buff);
+			
+			getline(in, buff);
+			ptr->setAdress(buff);
+			
+
+			getline(in, buff);
+			ptr->setRelation(buff);
+			
+
+			getline(in, buff);
+			ptr->setnickName(buff);
+			
+
+			this->insert(ptr);
+
+		}
+
+
+
+		in.close();
+	}
+	else
+	{
+
+		cout << "ERRORR    could not load file 'contacts.txt'";
+		system("pause");
+	}
+}
+
+
+
+void List::printFavorites()
+{
+	gotoXY(18, 5); cout << setw(30) << left << "Contact Names" << "   " << "Phone Numbers";
+
+
+	if(favorites.count>0)
+	{
+	Node *rptr = favorites.head;
+	for (int i = 7; i < (favorites.count + 7); i++)
+	{
+		gotoXY(18, i); cout << setw(30) << left << rptr->getName() << "    " << rptr->getPhoneNo();
+		rptr = rptr->next;
+	}
+	clearMenu();
+	gotoXY(93, 5); cout << "=>";
+	gotoXY(95, 5); cout << setw(20) << left << "* Remove";
+	gotoXY(95, 6); cout << setw(20) << left << "* Back";
+
+	int x = 5, y = 93;
+	int menu_item = 0;
+	bool running = true;
+	while (running)
+	{
+
+		system("pause>nul");
+
+		if (GetAsyncKeyState(VK_UP) && x != 5) //up button pressed
+		{
+			gotoXY(y, x); cout << "  ";
+			x--;
+			gotoXY(y, x); cout << "=>";
+			menu_item--;
+			continue;
+		}
+		if (GetAsyncKeyState(VK_DOWN) && x != 6)
+		{
+			gotoXY(y, x); cout << "  ";
+			x++;
+			gotoXY(y, x); cout << "=>";
+			menu_item++;
+			continue;
+
+		}
+		if (GetAsyncKeyState(VK_RETURN)<0)
+		{
+
+			switch (menu_item)
+			{
+			case 0://remove 
+			{
+				gotoXY(93, 5); cout << "  ";
+				removeFromFav();
+				break;
+			}
+			case 1:
+			{
+				clearMenu();
+				clearContacts();
+
+				printContacts();
+				printMainMenuOptions();
+				contact();
+				break;
+			}
+
+
+			}
+
+		}
+
+	}
+
+	}
+	else {
+		gotoXY(18, 10); cout << "No Favorite contacts to display";
+		Sleep(2000);
+		clearMenu();
+		clearContacts();
+		printMainMenuOptions();
+		contact();
+	}
+}
+
+
+
+
+
+
+void List::loadFav()
+{
+	favorites.loadContacts("favorites.txt");
 }
 
 
@@ -937,13 +1273,15 @@ void List::contact()
 
 		}
 
-		if (GetAsyncKeyState(VK_RETURN)) { // Enter key pressed
+		if (GetAsyncKeyState(VK_RETURN)<0) { // Enter key pressed
 
 			clearContacts();
-
-			
-
-			printDetails(menu_item);
+			Node *rptr = head;
+			for (int i = 0; i < menu_item; i++)
+			{
+				rptr = rptr->next;
+			}
+	printDetails(rptr);
 
 		}
 
@@ -979,6 +1317,33 @@ string List::substring(string s,int n)
 
 }
 
+bool List::isFound(string s, Node * head)
+{
+	Node *rptr = head;
+	while (rptr)
+	{
+		if (s == rptr->getName())
+		{
+			return true;
+		}
+		rptr = rptr->next;
+	}
+	return false;
+}
+
+Node *& List::isFoundAt(string s)
+{
+	Node *rptr = this->head;
+	for (int i = 0; i < this->count; i++)
+	{
+		if (rptr->getName() == s)
+		{
+			return rptr;
+		}
+	}
+	
+}
+
 void List::gotoXY(int x, int y)
 {
 
@@ -987,15 +1352,3 @@ void List::gotoXY(int x, int y)
 	SetConsoleCursorPosition(console, CursorPosition);
 
 }
-
-
-List::~List()
-{
-}
-class searchResults
-{
-
-
-
-
-};
