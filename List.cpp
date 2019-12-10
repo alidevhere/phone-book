@@ -584,7 +584,7 @@ void List::UpdateContact(Node *&rptr)
 			
 				if (( ptr->getName()!="0" )&& (ptr->getPhoneNo()!="0") )
 				{
-					if (!isFound(ptr->getName(), head))
+					if (!rptr->isSame(ptr))
 					{	deleteContact(rptr);
 					insert(ptr);
 					ofstream out;
@@ -598,7 +598,7 @@ void List::UpdateContact(Node *&rptr)
 					contact();
 					}else 
 					{
-						gotoXY(13, 20); cout << "Contact with this name already exists please change the name !!";
+						gotoXY(13, 20); cout << "this contact already exists: contact not updated";
 						Sleep(2000);
 						gotoXY(13, 20);cout<< "                                                                ";
 					}

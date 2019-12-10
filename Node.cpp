@@ -107,6 +107,19 @@ void Node::writeToFile(ofstream &out)
 	out << this->getNickName() << endl;
 }
 
+bool Node::isSame(Node * ptr)
+{
+	if (this->getName() == ptr->getName() && this->getPhoneNo() == ptr->getPhoneNo() &&
+		this->getadress() == ptr->getadress() && this->getNickName() == ptr->getNickName() &&
+		this->getmail() == ptr->getmail() && this->getrelation() == this->getrelation())
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 
 void Node::shareDetails(string s)
 {

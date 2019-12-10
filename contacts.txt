@@ -1,12 +1,12 @@
 8
-ahmed sattar
-098765432
-0
-0
-0
-0
 ali as
 23456789876
+0
+0
+0
+raju
+arbaz sheraz
+030456789056
 0
 0
 0
@@ -17,8 +17,8 @@ ali ashraf
 0
 0
 0
-arbaz sheraz
-030456789056
+ahmed sattar
+098765432
 0
 0
 0

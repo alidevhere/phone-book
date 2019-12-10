@@ -46,7 +46,7 @@ public:
 	// functions
 	char getNameLetter();
 	void writeToFile(ofstream &out);
-	
+	bool isSame(Node *ptr);
 
 
 	void shareDetails(string s);
