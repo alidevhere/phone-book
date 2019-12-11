@@ -106,7 +106,7 @@ void List::printMainMenuOptions()
 	gotoXY(18, 5); cout << setw(30) << left << "Contact Names" << "   " << "Phone Numbers";
 	gotoXY(18, 7); cout << "=>";
 
-	gotoXY(95, 5); cout << "* Add New Contatct";
+	gotoXY(95, 5); cout << "* Add New Contact";
 	gotoXY(95, 6); cout << "* Favorites";
 	gotoXY(95, 7); cout << "* Search";
 	gotoXY(95, 8); cout << "* Exit";
@@ -402,6 +402,7 @@ void List::searchControls()//after searching contats control is trnasfered to th
 					{
 						clearContacts();
 						printContactDetails(*resultsIter);
+
 						printDetails(*resultsIter);
 	
 					}
@@ -1360,16 +1361,12 @@ void List::start()
 	{
 		gotoXY(80, i); cout << "||";
 		gotoXY(0, i); cout << "||";
-
 	}
-
 	gotoXY(18, 5); cout << setw(30) << left << "Contact Names" << "   " << "Phone Numbers";
 	gotoXY(18, 7); cout << "=>";
-
-	gotoXY(95, 5); cout << "* Add New Contatct";
+	gotoXY(95, 5); cout << "* Add New Contact";
 	gotoXY(95, 6); cout << "* Favorites";
 	gotoXY(95, 7); cout << "* Search";
 	gotoXY(95, 8); cout << "* Exit";
-
 
 }

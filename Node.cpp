@@ -111,7 +111,7 @@ bool Node::isSame(Node * ptr)
 {
 	if (this->getName() == ptr->getName() && this->getPhoneNo() == ptr->getPhoneNo() &&
 		this->getadress() == ptr->getadress() && this->getNickName() == ptr->getNickName() &&
-		this->getmail() == ptr->getmail() && this->getrelation() == this->getrelation())
+		this->getmail() == ptr->getmail() && this->getrelation() == ptr->getrelation())
 	{
 		return true;
 	}
